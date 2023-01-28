@@ -53,9 +53,11 @@ const CheckoutForm = () => {
   return (
     <Center>
       <form onSubmit={handleSubmit} className="stripe-form">
-        <Card maxW="xs">
+        <Card maxW="xs" p="10px" m="10px" minW="xs">
           <div className="form-row">
+          {/* <br></br> */}
             <label htmlFor="email">Email Address</label>
+            <br></br>
             <input
               className="form-input"
               id="email"
@@ -69,8 +71,12 @@ const CheckoutForm = () => {
               }}
             />
           </div>
+          <br></br>
           <div className="form-row">
             <label htmlFor="card-element">Credit or debit card</label>
+            <br></br>
+            {/* <hr></hr> */}
+            <br></br>
             <CardElement id="card-element" onChange={handleChange} />
           </div>
           <CardBody>
@@ -78,7 +84,10 @@ const CheckoutForm = () => {
               View a summary of all your customers over the last month.
             </Text> */}
           </CardBody>
-        </Card>
+          <Button type="submit" className="submit-btn">Submit payment</Button>
+          <br></br>
+          {error && <Alert status="error">{error}</Alert>}
+        {success && <Alert status="success">Payment Successful!<br></br>Keep an eye on your inbox!</Alert>}
         {loading && (
           <Spinner
             thickness="4px"
@@ -88,12 +97,13 @@ const CheckoutForm = () => {
             size="xl"
           />
         )}
-        {error && <Alert status="error">{error}</Alert>}
-        {success && <Alert status="success">Payment Successful!<br></br>Keep an eye on your inbox!</Alert>}
+        </Card>
+        
+        
         {/* <button type="submit" className="submit-btn">
             Submit Payment
         </button> */}
-        <Button type="submit" className="submit-btn">Submit money</Button>
+        
       </form>
     </Center>
   );
