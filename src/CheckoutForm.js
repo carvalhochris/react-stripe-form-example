@@ -1,7 +1,9 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useState } from "react";
 import ApiService from "./api";
-import { Card, CardHeader, CardBody, CardFooter, Text, Center, Alert } from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, CardFooter, Text, Center, Alert, Button } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
+
 
 const CheckoutForm = () => {
   const [error, setError] = useState(null);
@@ -9,6 +11,7 @@ const CheckoutForm = () => {
   const [email, setEmail] = useState("");
   const stripe = useStripe();
   const elements = useElements();
+  const [loading, setLoading] = useState(false);
 
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
@@ -22,25 +25,28 @@ const CheckoutForm = () => {
   // Handle form submission.
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    console.log(success);
     const card = elements.getElement(CardElement);
-
+  
     const { paymentMethod, error } = await stripe.createPaymentMethod({
       type: "card",
       card: card,
     });
-    console.log(paymentMethod);
-
+  
     if (error) {
       setError(error.response.data);
+      setLoading(false);
     } else {
       ApiService.saveStripeInfo({ email, payment_method_id: paymentMethod.id })
         .then((response) => {
           console.log(response.data);
-          setSuccess("Payment Successful");
+          setSuccess(true);
+          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
-          setError("There was a problem with your payment, please try again later.");
+          setLoading(false);
         });
     }
   };
@@ -67,19 +73,31 @@ const CheckoutForm = () => {
             <label htmlFor="card-element">Credit or debit card</label>
             <CardElement id="card-element" onChange={handleChange} />
           </div>
-          {error && <Alert status="error">{error}</Alert>}
-          {success && <Alert status="success">{success}</Alert>}
-          <button type="submit" className="submit-btn">
-            Submit Payment
-          </button>
           <CardBody>
-            <Text>
+            {/* <Text>
               View a summary of all your customers over the last month.
-            </Text>
+            </Text> */}
           </CardBody>
         </Card>
+        {loading && (
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        )}
+        {error && <Alert status="error">{error}</Alert>}
+        {success && <Alert status="success">Payment Successful!<br></br>Keep an eye on your inbox!</Alert>}
+        {/* <button type="submit" className="submit-btn">
+            Submit Payment
+        </button> */}
+        <Button type="submit" className="submit-btn">Submit money</Button>
       </form>
     </Center>
   );
 };
 export default CheckoutForm;
+
+
