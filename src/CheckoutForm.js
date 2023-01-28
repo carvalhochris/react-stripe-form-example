@@ -1,6 +1,14 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useState } from "react";
 import ApiService from "./api";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Text,
+  Center,
+} from "@chakra-ui/react";
 
 const CheckoutForm = () => {
   const [error, setError] = useState(null);
@@ -41,8 +49,14 @@ const CheckoutForm = () => {
     }
   };
   return (
+    <Center>
     <form onSubmit={handleSubmit} className="stripe-form">
-      <div className="form-row">
+      {/* <Center> */}
+      
+      
+      
+      <Card maxW="xs">
+        <div className="form-row">
         <label htmlFor="email">Email Address</label>
         <input
           className="form-input"
@@ -57,18 +71,29 @@ const CheckoutForm = () => {
           }}
         />
       </div>
-      <div className="form-row">
+        <div className="form-row">
         <label htmlFor="card-element">Credit or debit card</label>
 
         <CardElement id="card-element" onChange={handleChange} />
+        
+      </div>
         <div className="card-errors" role="alert">
           {error}
         </div>
-      </div>
-      <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-btn">
         Submit Payment
       </button>
+        {/* <Center> */}
+          <CardBody>
+            <Text>
+              View a summary of all your customers over the last month.
+            </Text>
+          </CardBody>
+        {/* </Center> */}
+      </Card>
+      {/* </Center> */}
     </form>
+    </Center>
   );
 };
 export default CheckoutForm;
